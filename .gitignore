@@ -2,7 +2,7 @@
 # use IntelliJ or Eclipse as an IDE
 
 # Ignition Module files
-*.modl
+#*.modl
 
 # Java class files
 *.class
