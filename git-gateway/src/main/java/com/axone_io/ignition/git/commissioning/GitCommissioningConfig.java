@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -166,86 +170,6 @@ public class GitCommissioningConfig {
         this.importThemes = projectConfig.getCommissioning().isImportThemes();
         this.initDefaultBranch = projectConfig.getInitDefaultBranch();
     }
-    public String getRepoURI() {
-        return repoURI;
-    }
-
-    public void setRepoURI(String repoURI) {
-        this.repoURI = repoURI;
-    }
-
-    public String getRepoBranch() {
-        return repoBranch;
-    }
-
-    public void setRepoBranch(String repoBranch) {
-        this.repoBranch = repoBranch;
-    }
-
-    public String getIgnitionProjectName() {
-        return ignitionProjectName;
-    }
-
-    public void setIgnitionProjectName(String ignitionProjectName) {
-        this.ignitionProjectName = ignitionProjectName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getIgnitionUserName() {
-        return ignitionUserName;
-    }
-
-    public void setIgnitionUserName(String ignitionUserName) {
-        this.ignitionUserName = ignitionUserName;
-    }
-
-    public boolean isImportImages() {
-        return importImages;
-    }
-
-    public void setImportImages(boolean importImages) {
-        this.importImages = importImages;
-    }
-
-    public boolean isImportTags() {
-        return importTags;
-    }
-
-    public void setImportTags(boolean importTags) {
-        this.importTags = importTags;
-    }
-
-    public boolean isImportThemes() {
-        return importThemes;
-    }
-
-    public void setImportThemes(boolean importThemes) {
-        this.importThemes = importThemes;
-    }
-
     public String getSshKey() {
         return sshKey;
     }
@@ -273,14 +197,25 @@ public class GitCommissioningConfig {
         this.initDefaultBranch = initDefaultBranch;
     }
 }
+
 class ProjectConfig {
+    // Getters and setters
+    @lombok.Getter
+    @lombok.Setter
     private RepoConfig repo;
+    @lombok.Getter
+    @lombok.Setter
     private IgnitionConfig ignition;
+    @lombok.Getter
+    @lombok.Setter
     private UserConfig user;
+    @lombok.Getter
+    @lombok.Setter
     private CommissioningConfig commissioning;
+    @lombok.Getter
+    @lombok.Setter
     private String initDefaultBranch;
 
-    // Getters and setters
 }
 
 class RepoConfig {
@@ -327,30 +262,20 @@ class IgnitionConfig {
     }
 }
 
+@Getter
+@Setter
 class UserConfig {
+    // Getters and setters
     private String name;
     private String email;
     private String password;
-
-    // Getters and setters
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -358,6 +283,8 @@ class UserConfig {
     }
 }
 
+@Getter
+@Setter
 class CommissioningConfig {
     private boolean importThemes;
     private boolean importTags;
@@ -389,7 +316,11 @@ class CommissioningConfig {
     }
 }
 
+@Getter
+@Setter
 class ProjectConfigs {
-    private List<ProjectConfig> projects;
+
     // Getters and setters
+    private List<ProjectConfig> projects;
+
 }
