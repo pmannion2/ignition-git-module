@@ -17,10 +17,10 @@ import com.inductiveautomation.ignition.gateway.localdb.persistence.PersistenceI
 import com.inductiveautomation.ignition.gateway.project.ProjectManager;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 import simpleorm.dataset.SQuery;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,8 +44,8 @@ public class GitCommissioningUtils {
 
         try (FileInputStream fis = new FileInputStream(yamlConfigPath.toFile())) {
             if (yamlConfigPath.toFile().exists() && yamlConfigPath.toFile().isFile()) {
-                Yaml yaml = new Yaml();
-                GitCommissioningConfig projectConfigs = parseConfigLines(yaml.load(fis));
+                ProjectConfigs projectConfigs = parseYaml(yamlConfigPath);
+//                GitCommissioningConfig projectConfigs = parseConfigLines(yamlBytes);
 
                 for (ProjectConfig projectConfig : projectConfigs.getProjects()) {
                     GitCommissioningConfig gitConfig = new GitCommissioningConfig();
@@ -133,73 +133,14 @@ public class GitCommissioningUtils {
 
     }
 
-    static protected GitCommissioningConfig parseConfigLines(byte[ ignitionConf) {
-        Pattern repoUriPattern = Pattern.compile("repo.uri");
-        Pattern repoBranchPattern = Pattern.compile("repo.branch");
-
-        Pattern projectNamePattern = Pattern.compile("ignition.project.name");
-        Pattern ignitionUserName = Pattern.compile("ignition.user.name");
-
-        Pattern userNamePattern = Pattern.compile("user.name");
-        Pattern passwordPattern = Pattern.compile("user.password");
-        Pattern emailPattern = Pattern.compile("user.email");
-        Pattern sshKeyFilePath = Pattern.compile("user.shh.key.file.path");
-
-        Pattern importTags = Pattern.compile("commissioning.import.tags");
-        Pattern importThemes = Pattern.compile("commissioning.import.themes");
-        Pattern importImages = Pattern.compile("commissioning.import.images");
-
-        Pattern initDefaultBranch = Pattern.compile("init.defaultBranch");
-
-        GitCommissioningConfig config = new GitCommissioningConfig();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(ignitionConf), StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Matcher repoUriMatcher = repoUriPattern.matcher(line);
-                Matcher repoBranchMatcher = repoBranchPattern.matcher(line);
-                Matcher projectNameMatcher = projectNamePattern.matcher(line);
-                Matcher userNameMatcher = userNamePattern.matcher(line);
-                Matcher passwordMatcher = passwordPattern.matcher(line);
-                Matcher emailMatcher = emailPattern.matcher(line);
-                Matcher ignitionUserNameMatcher = ignitionUserName.matcher(line);
-                Matcher importTagsMatcher = importTags.matcher(line);
-                Matcher importThemesMatcher = importThemes.matcher(line);
-                Matcher importImagesMatcher = importImages.matcher(line);
-                Matcher sshKeyFilePathMatcher = sshKeyFilePath.matcher(line);
-                Matcher initDefaultBranchPathMatcher = initDefaultBranch.matcher(line);
-
-                if (repoUriMatcher.find()) {
-                    config.setRepoURI(line.split("=")[1]);
-                } else if (repoBranchMatcher.find()) {
-                    config.setRepoBranch(line.split("=")[1]);
-                } else if (projectNameMatcher.find()) {
-                    config.setIgnitionProjectName(line.split("=")[1]);
-                } else if (ignitionUserNameMatcher.find()) {
-                    config.setIgnitionUserName(line.split("=")[1]);
-                } else if (userNameMatcher.find()) {
-                    config.setUserName(line.split("=")[1]);
-                } else if (passwordMatcher.find()) {
-                    config.setUserPassword(line.split("=")[1]);
-                } else if (emailMatcher.find()) {
-                    config.setUserEmail(line.split("=")[1]);
-                } else if (importTagsMatcher.find()) {
-                    config.setImportTags(Boolean.parseBoolean(line.split("=")[1]));
-                } else if (importThemesMatcher.find()) {
-                    config.setImportThemes(Boolean.parseBoolean(line.split("=")[1]));
-                } else if (importImagesMatcher.find()) {
-                    config.setImportImages(Boolean.parseBoolean(line.split("=")[1]));
-                } else if (sshKeyFilePathMatcher.find()) {
-                    config.setSecretFromFilePath(Paths.get(line.split("=")[1]), true);
-                } else if (initDefaultBranchPathMatcher.find()) {
-                    config.setInitDefaultBranch(line.split("=")[1]);
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new RuntimeException("Invalid git configuration file.", e);
+    static protected ProjectConfigs parseYaml(Path yamlFilePath) {
+        try (InputStream inputStream = new FileInputStream(yamlFilePath.toFile())) {
+            Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
+            return yaml.load(inputStream);
         } catch (Exception e) {
-            logger.error("An error occurred while importing the Git configuration file.", e);
-            throw new RuntimeException(e);
+            logger.error("An error occurred while parsing the YAML configuration file.", e);
+            return null; // or throw a custom exception
         }
-        return config;
     }
+
 }
