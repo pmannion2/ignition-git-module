@@ -5,19 +5,27 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
+import static com.axone_io.ignition.git.managers.GitManager.getDataFolderPath;
 import static org.junit.Assert.*;
 
 public class GitCommissioningUtilsTest {
     @Test
     public void
-    whenLoadYAMLDocumentWithTopLevelClass_thenLoadCorrectJavaObjectWithNestedObjects() {
+    whenLoadYAMLDocumentWithTopLevelClass_thenLoadCorrectJavaObjectWithNestedObjects() throws FileNotFoundException {
 
         Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class, new LoaderOptions()));
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("git.yaml");
+        Path dataDir = getDataFolderPath();
+        Path yamlConfigPath = dataDir.resolve("git.yaml"); // Assuming the YAML file is named git.yaml
+        InputStream inputStream = new FileInputStream(yamlConfigPath.toFile());
+//        Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
+//        InputStream inputStream = this.getClass()
+//                .getClassLoader()
+//                .getResourceAsStream("C:\\Users\\PatrickMannion\\IdeaProjects\\ignition-git-module\\git-gateway\\src\\test\\java\\com\\axone_io\\ignition\\git\\commissioning\\git.yaml");
         ProjectConfigs projectConfigs = yaml.load(inputStream);
 
         assertNotNull(projectConfigs);
