@@ -153,6 +153,12 @@ public class GitCommissioningConfig {
     private String ignitionUserName;
     @Getter
     @Setter
+    private boolean ignitionProjectInheritable;
+    @Getter
+    @Setter
+    private String ignitionProjectParentName;
+    @Getter
+    @Setter
     private String userName;
     @Getter
     @Setter
@@ -230,12 +236,6 @@ class RepoConfig {
 class IgnitionConfig {
     private String projectName;
     private String userName;
-    @Getter
-    @Setter
-    private boolean inheritable;
-    @Getter
-    @Setter
-    private String parentProjectName;
 
     // Getters and setters
     public String getProjectName() {
