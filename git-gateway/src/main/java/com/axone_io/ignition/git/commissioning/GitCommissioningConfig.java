@@ -190,6 +190,8 @@ public class GitCommissioningConfig {
         this.repoBranch = projectConfig.getRepo().getBranch();
         this.ignitionProjectName = projectConfig.getIgnition().getProjectName();
         this.ignitionUserName = projectConfig.getIgnition().getUserName();
+        this.ignitionProjectInheritable = projectConfig.getIgnition().isInheritable();
+        this.ignitionProjectParentName = projectConfig.getIgnition().getParentName();
         this.userName = projectConfig.getUser().getName();
         this.userEmail = projectConfig.getUser().getEmail();
         this.userPassword = projectConfig.getUser().getPassword();
@@ -233,26 +235,17 @@ class RepoConfig {
 }
 
 
+@Getter
+@Setter
 class IgnitionConfig {
+    @Setter
     private String projectName;
+    @Setter
     private String userName;
-
-    // Getters and setters
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    @Setter
+    private boolean inheritable;
+    @Setter
+    private String parentName;
 }
 
 @Getter

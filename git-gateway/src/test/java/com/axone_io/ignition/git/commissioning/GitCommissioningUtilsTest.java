@@ -7,8 +7,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class GitCommissioningUtilsTest {
     @Test
@@ -44,5 +43,40 @@ public class GitCommissioningUtilsTest {
                 .get(0)
                 .getIgnition()
                 .getUserName());
+        assertFalse(projectConfigs.getProjects()
+                .get(0)
+                .getIgnition()
+                .isInheritable());
+        assertEquals("Global", projectConfigs.getProjects()
+                .get(0)
+                .getIgnition()
+                .getParentName());
+        assertEquals("pmannion2", projectConfigs.getProjects()
+                .get(0)
+                .getUser()
+                .getName());
+        assertEquals("pmannion@whiskeyhouse.com", projectConfigs.getProjects()
+                .get(0)
+                .getUser()
+                .getName());
+        assertEquals("abc123", projectConfigs.getProjects()
+                .get(0)
+                .getUser()
+                .getName());
+        assertTrue(projectConfigs.getProjects()
+                .get(0)
+                .getCommissioning()
+                .isImportThemes());
+        assertTrue(projectConfigs.getProjects()
+                .get(0)
+                .getCommissioning()
+                .isImportTags());
+        assertTrue(projectConfigs.getProjects()
+                .get(0)
+                .getCommissioning()
+                .isImportImages());
+        assertEquals("main",projectConfigs.getProjects()
+                .get(0)
+                .getInitDefaultBranch());
     }
 }
