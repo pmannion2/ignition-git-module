@@ -24,6 +24,8 @@ public class GitCommissioningUtilsTest {
         assertNotNull(projectConfigs.getProjects());
         assertEquals(2, projectConfigs.getProjects()
                 .size());
+
+        // Unit tests for first project in git.yaml
         assertNotNull(projectConfigs.getProjects()
                 .get(0)
                 .getRepo());
@@ -77,6 +79,63 @@ public class GitCommissioningUtilsTest {
                 .isImportImages());
         assertEquals("main",projectConfigs.getProjects()
                 .get(0)
+                .getInitDefaultBranch());
+
+
+        // Unit tests for second project in git.yaml
+        assertNotNull(projectConfigs.getProjects()
+                .get(1)
+                .getRepo());
+        assertEquals("https://github.com/WHK01/whk-distillery01-ignition-global.git", projectConfigs.getProjects()
+                .get(1)
+                .getRepo()
+                .getUri());
+        assertEquals("development", projectConfigs.getProjects()
+                .get(1)
+                .getRepo()
+                .getBranch());
+        assertEquals("WHK-MES", projectConfigs.getProjects()
+                .get(1)
+                .getIgnition()
+                .getProjectName());
+        assertEquals("admin", projectConfigs.getProjects()
+                .get(1)
+                .getIgnition()
+                .getUserName());
+        assertFalse(projectConfigs.getProjects()
+                .get(1)
+                .getIgnition()
+                .isInheritable());
+        assertEquals("Global", projectConfigs.getProjects()
+                .get(1)
+                .getIgnition()
+                .getParentName());
+        assertEquals("pmannion2", projectConfigs.getProjects()
+                .get(1)
+                .getUser()
+                .getName());
+        assertEquals("pmannion@whiskeyhouse.com", projectConfigs.getProjects()
+                .get(1)
+                .getUser()
+                .getName());
+        assertEquals("abc123", projectConfigs.getProjects()
+                .get(1)
+                .getUser()
+                .getName());
+        assertTrue(projectConfigs.getProjects()
+                .get(1)
+                .getCommissioning()
+                .isImportThemes());
+        assertTrue(projectConfigs.getProjects()
+                .get(1)
+                .getCommissioning()
+                .isImportTags());
+        assertTrue(projectConfigs.getProjects()
+                .get(1)
+                .getCommissioning()
+                .isImportImages());
+        assertEquals("main",projectConfigs.getProjects()
+                .get(1)
                 .getInitDefaultBranch());
     }
 }
