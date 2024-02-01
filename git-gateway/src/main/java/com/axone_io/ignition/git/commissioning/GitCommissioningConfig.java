@@ -139,21 +139,39 @@ import org.yaml.snakeyaml.constructor.Constructor;
 public class GitCommissioningConfig {
 
     // Existing fields and methods
+    @Getter
+    @Setter
     private String repoURI;
+    @Getter
+    @Setter
     private String repoBranch;
+    @Getter
+    @Setter
     private String ignitionProjectName;
+    @Getter
+    @Setter
     private String ignitionUserName;
+    @Getter
+    @Setter
     private String userName;
+    @Getter
+    @Setter
     private String userPassword;
     @Getter
     @Setter
     private String sshKey;
+    @Getter
+    @Setter
     private String userEmail;
-
+    @Getter
+    @Setter
     private boolean importImages = false;
+    @Getter
+    @Setter
     private boolean importTags = false;
+    @Getter
+    @Setter
     private boolean importThemes = false;
-
     @Getter
     @Setter
     private String initDefaultBranch;
@@ -185,26 +203,6 @@ public class GitCommissioningConfig {
             }
         }
     }
-}
-
-public class ProjectConfig {
-    // Getters and setters
-    @lombok.Getter
-    @lombok.Setter
-    private RepoConfig repo;
-    @lombok.Getter
-    @lombok.Setter
-    private IgnitionConfig ignition;
-    @lombok.Getter
-    @lombok.Setter
-    private UserConfig user;
-    @lombok.Getter
-    @lombok.Setter
-    private CommissioningConfig commissioning;
-    @lombok.Getter
-    @lombok.Setter
-    private String initDefaultBranch;
-
 }
 
 class RepoConfig {
@@ -313,9 +311,3 @@ class CommissioningConfig {
     }
 }
 
-@Getter
-@Setter
-public class ProjectConfigs {
-    @Setter
-    private List<ProjectConfig> projects;
-}
