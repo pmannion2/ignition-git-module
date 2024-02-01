@@ -5,6 +5,8 @@ projects:
     ignition:
       project_name: WHK-MES
       user_name: admin
+      inheritable: false
+      parent_project: Global
     user:
       name: pmannion2
       email: pmannion@whiskeyhouse.com
@@ -20,6 +22,8 @@ projects:
     ignition:
       project_name: Global
       user_name: admin
+      inheritable: true
+      parent_project: null
     user:
       name: pmannion2
       email: pmannion@whiskeyhouse.com

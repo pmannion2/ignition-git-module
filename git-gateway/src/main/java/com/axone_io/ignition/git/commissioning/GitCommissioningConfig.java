@@ -230,6 +230,12 @@ class RepoConfig {
 class IgnitionConfig {
     private String projectName;
     private String userName;
+    @Getter
+    @Setter
+    private boolean inheritable;
+    @Getter
+    @Setter
+    private String parentProjectName;
 
     // Getters and setters
     public String getProjectName() {

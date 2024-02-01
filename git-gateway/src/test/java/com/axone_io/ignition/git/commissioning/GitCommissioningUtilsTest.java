@@ -10,7 +10,7 @@ import java.io.InputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class GitCommissioningUtilTest {
+public class GitCommissioningUtilsTest {
     @Test
     public void
     whenLoadYAMLDocumentWithTopLevelClass_thenLoadCorrectJavaObjectWithNestedObjects() {
