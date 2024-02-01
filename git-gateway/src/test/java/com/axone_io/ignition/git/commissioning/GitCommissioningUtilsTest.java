@@ -10,7 +10,7 @@ import java.io.InputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class GitCommissioningUtilTest {
+public class GitCommissioningUtilsTest {
     @Test
     public void
     whenLoadYAMLDocumentWithTopLevelClass_thenLoadCorrectJavaObjectWithNestedObjects() {
@@ -32,5 +32,17 @@ public class GitCommissioningUtilTest {
                 .get(0)
                 .getRepo()
                 .getUri());
+        assertEquals("development", projectConfigs.getProjects()
+                .get(0)
+                .getRepo()
+                .getBranch());
+        assertEquals("WHK-MES", projectConfigs.getProjects()
+                .get(0)
+                .getIgnition()
+                .getProjectName());
+        assertEquals("admin", projectConfigs.getProjects()
+                .get(0)
+                .getIgnition()
+                .getUserName());
     }
 }
