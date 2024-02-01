@@ -1,0 +1,31 @@
+projects:
+  - repo:
+      uri: https://github.com/WHK01/whk-distillery01-mes-ui.git
+      branch: development
+    ignition:
+      project_name: WHK-MES
+      user_name: admin
+    user:
+      name: pmannion2
+      email: pmannion@whiskeyhouse.com
+      password: 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
+    commissioning:
+      import_themes: true
+      import_tags: true
+      import_images: true
+    init_default_branch: main
+  - repo:
+      uri: https://github.com/WHK01/whk-distillery01-ignition-global.git
+      branch: development
+    ignition:
+      project_name: Global
+      user_name: admin
+    user:
+      name: pmannion2
+      email: pmannion@whiskeyhouse.com
+      password: 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
+    commissioning:
+        import_themes: true
+        import_tags: true
+        import_images: true
+    init_default_branch: main
