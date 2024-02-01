@@ -187,7 +187,7 @@ public class GitCommissioningConfig {
     }
 }
 
-class ProjectConfig {
+public class ProjectConfig {
     // Getters and setters
     @lombok.Getter
     @lombok.Setter
@@ -315,12 +315,7 @@ class CommissioningConfig {
 
 @Getter
 @Setter
-class ProjectConfigs {
+public class ProjectConfigs {
     @Setter
     private List<ProjectConfig> projects;
-
-    }
-
-
-
 }

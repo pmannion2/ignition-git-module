@@ -1,6 +1,8 @@
 package com.axone_io.ignition.git.commissioning.utils;
 
 import com.axone_io.ignition.git.commissioning.GitCommissioningConfig;
+import com.axone_io.ignition.git.commissioning.ProjectConfig;
+import com.axone_io.ignition.git.commissioning.ProjectConfigs;
 import com.axone_io.ignition.git.managers.GitImageManager;
 import com.axone_io.ignition.git.managers.GitProjectManager;
 import com.axone_io.ignition.git.managers.GitTagManager;
@@ -13,12 +15,11 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.localdb.persistence.PersistenceInterface;
 import com.inductiveautomation.ignition.gateway.project.ProjectManager;
 import org.apache.commons.io.FileUtils;
+import org.yaml.snakeyaml.Yaml;
 import simpleorm.dataset.SQuery;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +29,49 @@ import java.util.regex.Pattern;
 
 import static com.axone_io.ignition.git.GatewayHook.context;
 import static com.axone_io.ignition.git.managers.GitManager.*;
+
+public class GitCommissioningUtils {
+    private final static LoggerEx logger = LoggerEx.newBuilder().build(GitCommissioningUtils.class);
+
+    public static GitCommissioningConfig config;
+
+    @Subscribe
+    public static void loadConfiguration() {
+        Path dataDir = getDataFolderPath();
+        Path yamlConfigPath = dataDir.resolve("git.yaml"); // Assuming the YAML file is named git.yaml
+        ProjectManager projectManager = context.getProjectManager();
+
+        try (FileInputStream fis = new FileInputStream(yamlConfigPath.toFile())) {
+            Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
+            ProjectConfigs projectConfigs = yaml.load(fis);
+
+            for (ProjectConfig projectConfig : projectConfigs.getProjects()) {
+                GitCommissioningConfig gitConfig = new GitCommissioningConfig();
+                gitConfig.loadFromProjectConfig(projectConfig);
+
+                config = gitConfig;
+                if (projectManager.getProjectNames().contains(config.getIgnitionProjectName())) {
+                    logger.info("The configuration of the git module was interrupted because the project '" + config.getIgnitionProjectName() + "' already exist.");
+                    return;
+
+                if (config.getRepoURI() == null || config.getRepoBranch() == null
+                        || config.getIgnitionProjectName() == null || config.getIgnitionUserName() == null
+                        || config.getUserName() == null || (config.getUserPassword() == null && config.getSshKey() == null)
+                        || config.getUserEmail() == null) {
+                    throw new RuntimeException("Incomplete git configuration file.");
+                }
+
+                projectManager.createProject(config.getIgnitionProjectName(), new ProjectManifest(config.getIgnitionProjectName(), "", false, false, ""), new ArrayList());
+
+                Path projectDir = getProjectFolderPath(config.getIgnitionProjectName());
+                clearDirectory(projectDir);
+
+                }
+        } catch (Exception e) {
+            logger.error("An error occurred while loading the Git configuration from YAML.", e);
+        }
+    }
+}
 
 public class GitCommissioningUtils {
     private final static LoggerEx logger = LoggerEx.newBuilder().build(GitCommissioningUtils.class);
