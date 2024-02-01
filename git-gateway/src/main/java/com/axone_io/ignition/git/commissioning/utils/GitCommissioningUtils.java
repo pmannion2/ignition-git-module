@@ -45,7 +45,7 @@ public class GitCommissioningUtils {
         try (FileInputStream fis = new FileInputStream(yamlConfigPath.toFile())) {
             if (yamlConfigPath.toFile().exists() && yamlConfigPath.toFile().isFile()) {
                 Yaml yaml = new Yaml();
-                ProjectConfigs projectConfigs = yaml.load(fis);
+                GitCommissioningConfig projectConfigs = parseConfigLines(yaml.load(fis));
 
                 for (ProjectConfig projectConfig : projectConfigs.getProjects()) {
                     GitCommissioningConfig gitConfig = new GitCommissioningConfig();
@@ -133,7 +133,7 @@ public class GitCommissioningUtils {
 
     }
 
-    static protected GitCommissioningConfig parseConfigLines(byte[] ignitionConf) {
+    static protected GitCommissioningConfig parseConfigLines(byte[ ignitionConf) {
         Pattern repoUriPattern = Pattern.compile("repo.uri");
         Pattern repoBranchPattern = Pattern.compile("repo.branch");
 
