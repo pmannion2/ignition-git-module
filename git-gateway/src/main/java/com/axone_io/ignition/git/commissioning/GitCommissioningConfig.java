@@ -145,6 +145,8 @@ public class GitCommissioningConfig {
     private String ignitionUserName;
     private String userName;
     private String userPassword;
+    @Getter
+    @Setter
     private String sshKey;
     private String userEmail;
 
@@ -152,6 +154,8 @@ public class GitCommissioningConfig {
     private boolean importTags = false;
     private boolean importThemes = false;
 
+    @Getter
+    @Setter
     private String initDefaultBranch;
 
     private ProjectConfig projectConfig;;
@@ -170,13 +174,6 @@ public class GitCommissioningConfig {
         this.importThemes = projectConfig.getCommissioning().isImportThemes();
         this.initDefaultBranch = projectConfig.getInitDefaultBranch();
     }
-    public String getSshKey() {
-        return sshKey;
-    }
-
-    public void setSshKey(String sshKey) {
-        this.sshKey = sshKey;
-    }
 
     public void setSecretFromFilePath(Path filePath, boolean isSSHAuth) throws IOException {
         if (filePath.toFile().exists() && filePath.toFile().isFile()) {
@@ -187,14 +184,6 @@ public class GitCommissioningConfig {
                 this.userPassword = secret;
             }
         }
-    }
-
-    public String getInitDefaultBranch() {
-        return initDefaultBranch;
-    }
-
-    public void setInitDefaultBranch(String initDefaultBranch) {
-        this.initDefaultBranch = initDefaultBranch;
     }
 }
 
@@ -269,6 +258,10 @@ class UserConfig {
     private String name;
     private String email;
     private String password;
+    @Getter
+    @Setter
+    private String sshKey;
+
 
     public void setName(String name) {
         this.name = name;
@@ -281,34 +274,38 @@ class UserConfig {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setSshKey(String sshKey) {
+        this.sshKey = sshKey;
+    }
+
+    public void setSecretFromFilePath(Path filePath, boolean isSSHAuth) throws IOException {
+        if (filePath.toFile().exists() && filePath.toFile().isFile()) {
+            String secret = Files.readString(filePath, StandardCharsets.UTF_8);
+            if (isSSHAuth) {
+                this.sshKey = secret;
+            } else {
+                this.password = secret;
+            }
+        }
+    }
+
 }
 
 @Getter
 @Setter
 class CommissioningConfig {
+    // Getters and setters
     private boolean importThemes;
     private boolean importTags;
     private boolean importImages;
-
-    // Getters and setters
-    public boolean isImportThemes() {
-        return importThemes;
-    }
 
     public void setImportThemes(boolean importThemes) {
         this.importThemes = importThemes;
     }
 
-    public boolean isImportTags() {
-        return importTags;
-    }
-
     public void setImportTags(boolean importTags) {
         this.importTags = importTags;
-    }
-
-    public boolean isImportImages() {
-        return importImages;
     }
 
     public void setImportImages(boolean importImages) {
@@ -319,8 +316,11 @@ class CommissioningConfig {
 @Getter
 @Setter
 class ProjectConfigs {
-
-    // Getters and setters
+    @Setter
     private List<ProjectConfig> projects;
+
+    }
+
+
 
 }
