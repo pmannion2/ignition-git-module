@@ -15,33 +15,22 @@ public class GitCommissioningUtilTest {
     public void
     whenLoadYAMLDocumentWithTopLevelClass_thenLoadCorrectJavaObjectWithNestedObjects() {
 
-        Yaml yaml = new Yaml(new Constructor(ProjectConfig.class, new LoaderOptions()));
+        Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class, new LoaderOptions()));
         InputStream inputStream = this.getClass()
                 .getClassLoader()
-                .getResourceAsStream("yaml/customer_with_contact_details_and_address.yaml");
-        ProjectConfig projectConfig = yaml.load(inputStream);
+                .getResourceAsStream("git.yaml");
+        ProjectConfigs projectConfigs = yaml.load(inputStream);
 
-        assertNotNull(projectConfig);
-        assertEquals("John", projectConfig.getFirstName());
-        assertEquals("Doe", projectConfig.getLastName());
-        assertEquals(31, projectConfig.getAge());
-        assertNotNull(projectConfig.getContactDetails());
-        assertEquals(2, projectConfig.getContactDetails().size());
-
-        assertEquals("mobile", projectConfig.getContactDetails()
+        assertNotNull(projectConfigs);
+        assertNotNull(projectConfigs.getProjects());
+        assertEquals(2, projectConfigs.getProjects()
+                .size());
+        assertNotNull(projectConfigs.getProjects()
                 .get(0)
-                .getType());
-        assertEquals(123456789, projectConfig.getContactDetails()
+                .getRepo());
+        assertEquals("https://github.com/WHK01/whk-distillery01-mes-ui.git", projectConfigs.getProjects()
                 .get(0)
-                .getNumber());
-        assertEquals("landline", projectConfig.getContactDetails()
-                .get(1)
-                .getType());
-        assertEquals(456786868, projectConfig.getContactDetails()
-                .get(1)
-                .getNumber());
-        assertNotNull(projectConfig.getHomeAddress());
-        assertEquals("Xyz, DEF Street", projectConfig.getHomeAddress()
-                .getLine());
+                .getRepo()
+                .getUri());
     }
 }

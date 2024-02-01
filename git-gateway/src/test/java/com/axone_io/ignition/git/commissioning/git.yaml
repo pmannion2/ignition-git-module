@@ -8,7 +8,7 @@ projects:
     user:
       name: pmannion2
       email: pmannion@whiskeyhouse.com
-      password: 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
+      password: abc123
     commissioning:
       import_themes: true
       import_tags: true
