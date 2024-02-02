@@ -3,6 +3,7 @@ package com.axone_io.ignition.git.commissioning.utils;
 import com.axone_io.ignition.git.commissioning.GitCommissioningConfig;
 import com.axone_io.ignition.git.commissioning.ProjectConfig;
 import com.axone_io.ignition.git.commissioning.ProjectConfigs;
+import com.axone_io.ignition.git.commissioning.RepoConfig;
 import com.axone_io.ignition.git.managers.GitImageManager;
 import com.axone_io.ignition.git.managers.GitProjectManager;
 import com.axone_io.ignition.git.managers.GitTagManager;
@@ -19,9 +20,12 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import simpleorm.dataset.SQuery;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.axone_io.ignition.git.GatewayHook.context;
 import static com.axone_io.ignition.git.managers.GitManager.*;
@@ -132,8 +136,41 @@ public class GitCommissioningUtils {
 
     static protected ProjectConfigs parseYaml(Path yamlFilePath) {
         try (InputStream inputStream = new FileInputStream(yamlFilePath.toFile())) {
-            Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
-            return yaml.load(inputStream);
+//            Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
+            Yaml yaml = new Yaml();
+            Object obj = yaml.load(inputStream);
+
+            if (obj instanceof List) {
+                List<Map<String, Object>> list = (List<Map<String, Object>>) obj;
+                for (Map<String, Object> item : list) {
+                    System.out.println(item);
+
+                    String firstKey = item.keySet().iterator().next();
+                    String className = firstKey.substring(0, firstKey.indexOf('_'));
+                    try {
+                        // Dynamically determine class and instantiate
+                        Class<?> clazz = Class.forName("com.axone_io.ignition.git.commissioning." + className);
+                        ProjectConfig instance = (ProjectConfig) clazz.newInstance();
+
+                        // Populate instance fields
+                        for (Map.Entry<String, Object> entry : item.entrySet()) {
+                            String fieldName = entry.getKey().substring(entry.getKey().indexOf('_') + 1);
+                            Field field = clazz.getDeclaredField(fieldName);
+                            field.setAccessible(true);
+                            field.set(instance, entry.getValue());
+                        }
+
+
+
+                        // Use the instance as needed
+                        System.out.println(instance);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
         } catch (Exception e) {
             logger.error("An error occurred while parsing the YAML configuration file.", e);
             return null; // or throw a custom exception

@@ -182,8 +182,6 @@ public class GitCommissioningConfig {
     @Setter
     private String initDefaultBranch;
 
-    private ProjectConfig projectConfig;;
-
     public void loadFromProjectConfig(ProjectConfig projectConfig) {
 
         this.repoURI = projectConfig.getRepo().getUri();
@@ -213,100 +211,4 @@ public class GitCommissioningConfig {
     }
 }
 
-class RepoConfig {
-    private String uri;
-    private String branch;
-
-    // Getters and setters
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-    public String getBranch() {
-        return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
-    }
-}
-
-
-@Getter
-@Setter
-class IgnitionConfig {
-    @Setter
-    private String projectName;
-    @Setter
-    private String userName;
-    @Setter
-    private boolean inheritable;
-    @Setter
-    private String parentName;
-}
-
-@Getter
-@Setter
-class UserConfig {
-    // Getters and setters
-    private String name;
-    private String email;
-    private String password;
-    @Getter
-    @Setter
-    private String sshKey;
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setSshKey(String sshKey) {
-        this.sshKey = sshKey;
-    }
-
-    public void setSecretFromFilePath(Path filePath, boolean isSSHAuth) throws IOException {
-        if (filePath.toFile().exists() && filePath.toFile().isFile()) {
-            String secret = Files.readString(filePath, StandardCharsets.UTF_8);
-            if (isSSHAuth) {
-                this.sshKey = secret;
-            } else {
-                this.password = secret;
-            }
-        }
-    }
-
-}
-
-@Getter
-@Setter
-class CommissioningConfig {
-    // Getters and setters
-    private boolean importThemes;
-    private boolean importTags;
-    private boolean importImages;
-
-    public void setImportThemes(boolean importThemes) {
-        this.importThemes = importThemes;
-    }
-
-    public void setImportTags(boolean importTags) {
-        this.importTags = importTags;
-    }
-
-    public void setImportImages(boolean importImages) {
-        this.importImages = importImages;
-    }
-}
 
