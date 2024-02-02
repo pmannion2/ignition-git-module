@@ -155,10 +155,12 @@ public class GitCommissioningUtils {
                             Object value = entry.getValue();
                             if (value != null) {
                                 if (field.getType().isAssignableFrom(value.getClass())) {
+                                    logger.info("Successful addition of field: " + fieldName+ ": " + value);
                                     field.set(config, value);
                                 } else {
                                     // Handle type conversion if necessary, e.g., for Boolean fields
                                     if (field.getType().equals(Boolean.class) && value instanceof String) {
+                                        logger.info("Successful addition of field: " + fieldName+ ": " + value);
                                         field.set(config, Boolean.parseBoolean((String) value));
                                     } else {
                                         // Log or throw an error for unsupported types
@@ -171,6 +173,7 @@ public class GitCommissioningUtils {
                                 // This is particularly relevant for object wrapper types like Boolean, String, etc.
                                 if (!field.getType().isPrimitive()) {
                                     field.set(config, null);
+                                    logger.info("Successful addition of field: " + fieldName+ ": null");
                                 } else {
                                     // For primitive fields, you might decide to leave the default value
                                     // or handle it according to your application's needs.
@@ -182,11 +185,11 @@ public class GitCommissioningUtils {
                             logger.error("Error occurred in fetching YAML Git Config data ", e);
                         }
 
-                    projectConfigs.addProject(config);
                     }
-                    // Return project configs
-                    return projectConfigs;
+                    projectConfigs.addProject(config);
                 }
+                // Return project configs
+                return projectConfigs;
             }
         } catch (IOException e) {
             logger.error("An error occurred while fetching the YAML configuration file.", e);
