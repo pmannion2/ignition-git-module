@@ -3,7 +3,6 @@ package com.axone_io.ignition.git.commissioning.utils;
 import com.axone_io.ignition.git.commissioning.GitCommissioningConfig;
 import com.axone_io.ignition.git.commissioning.ProjectConfig;
 import com.axone_io.ignition.git.commissioning.ProjectConfigs;
-import com.axone_io.ignition.git.commissioning.RepoConfig;
 import com.axone_io.ignition.git.managers.GitImageManager;
 import com.axone_io.ignition.git.managers.GitProjectManager;
 import com.axone_io.ignition.git.managers.GitTagManager;
@@ -16,7 +15,6 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.localdb.persistence.PersistenceInterface;
 import com.inductiveautomation.ignition.gateway.project.ProjectManager;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 import simpleorm.dataset.SQuery;
 
 import java.io.*;
