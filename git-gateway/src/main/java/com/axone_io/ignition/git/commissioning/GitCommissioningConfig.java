@@ -5,108 +5,73 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
+
 public class GitCommissioningConfig {
+
+    // Existing fields and methods
+    @Getter
+    @Setter
     private String repoURI;
+    @Getter
+    @Setter
     private String repoBranch;
+    @Getter
+    @Setter
     private String ignitionProjectName;
+    @Getter
+    @Setter
     private String ignitionUserName;
+    @Getter
+    @Setter
+    private boolean ignitionProjectInheritable;
+    @Getter
+    @Setter
+    @Nullable
+    // This field is nullable
+    private String ignitionProjectParentName;
+    @Getter
+    @Setter
     private String userName;
+    @Getter
+    @Setter
     private String userPassword;
+    @Getter
+    @Setter
     private String sshKey;
+    @Getter
+    @Setter
     private String userEmail;
-
+    @Getter
+    @Setter
     private boolean importImages = false;
+    @Getter
+    @Setter
     private boolean importTags = false;
+    @Getter
+    @Setter
     private boolean importThemes = false;
-
+    @Getter
+    @Setter
     private String initDefaultBranch;
 
-    public String getRepoURI() {
-        return repoURI;
-    }
+    public void loadFromProjectConfig(ProjectConfig projectConfig) {
 
-    public void setRepoURI(String repoURI) {
-        this.repoURI = repoURI;
-    }
-
-    public String getRepoBranch() {
-        return repoBranch;
-    }
-
-    public void setRepoBranch(String repoBranch) {
-        this.repoBranch = repoBranch;
-    }
-
-    public String getIgnitionProjectName() {
-        return ignitionProjectName;
-    }
-
-    public void setIgnitionProjectName(String ignitionProjectName) {
-        this.ignitionProjectName = ignitionProjectName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getIgnitionUserName() {
-        return ignitionUserName;
-    }
-
-    public void setIgnitionUserName(String ignitionUserName) {
-        this.ignitionUserName = ignitionUserName;
-    }
-
-    public boolean isImportImages() {
-        return importImages;
-    }
-
-    public void setImportImages(boolean importImages) {
-        this.importImages = importImages;
-    }
-
-    public boolean isImportTags() {
-        return importTags;
-    }
-
-    public void setImportTags(boolean importTags) {
-        this.importTags = importTags;
-    }
-
-    public boolean isImportThemes() {
-        return importThemes;
-    }
-
-    public void setImportThemes(boolean importThemes) {
-        this.importThemes = importThemes;
-    }
-
-    public String getSshKey() {
-        return sshKey;
-    }
-
-    public void setSshKey(String sshKey) {
-        this.sshKey = sshKey;
+        this.repoURI = projectConfig.getRepo_uri();
+        this.repoBranch = projectConfig.getRepo_branch();
+        this.ignitionProjectName = projectConfig.getIgnition_projectName();
+        this.ignitionUserName = projectConfig.getIgnition_userName();
+        this.ignitionProjectInheritable = projectConfig.getIgnition_inheritable();
+        this.ignitionProjectParentName = projectConfig.getIgnition_parentName();
+        this.userName = projectConfig.getUser_name();
+        this.userEmail = projectConfig.getUser_email();
+        this.userPassword = projectConfig.getUser_password();
+        this.importImages = projectConfig.getCommissioning_importImages();
+        this.importTags = projectConfig.getCommissioning_importTags();
+        this.importThemes = projectConfig.getCommissioning_importThemes();
+        this.initDefaultBranch = projectConfig.getInitDefaultBranch();
     }
 
     public void setSecretFromFilePath(Path filePath, boolean isSSHAuth) throws IOException {
@@ -119,12 +84,6 @@ public class GitCommissioningConfig {
             }
         }
     }
-
-    public String getInitDefaultBranch() {
-        return initDefaultBranch;
-    }
-
-    public void setInitDefaultBranch(String initDefaultBranch) {
-        this.initDefaultBranch = initDefaultBranch;
-    }
 }
+
+
