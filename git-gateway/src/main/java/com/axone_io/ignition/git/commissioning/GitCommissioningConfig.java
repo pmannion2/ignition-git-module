@@ -7,6 +7,7 @@ import java.nio.file.Path;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 public class GitCommissioningConfig {
 
@@ -28,6 +29,8 @@ public class GitCommissioningConfig {
     private boolean ignitionProjectInheritable;
     @Getter
     @Setter
+    @Nullable
+    // This field is nullable
     private String ignitionProjectParentName;
     @Getter
     @Setter

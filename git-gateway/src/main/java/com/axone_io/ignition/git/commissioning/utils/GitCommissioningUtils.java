@@ -153,16 +153,29 @@ public class GitCommissioningUtils {
 
                             // Set the field value, converting to the appropriate type if necessary
                             Object value = entry.getValue();
-                            if (field.getType().isAssignableFrom(value.getClass())) {
-                                field.set(config, value);
-                            } else {
-                                // Handle type conversion if necessary, e.g., for Boolean fields
-                                if (field.getType().equals(Boolean.class) && value instanceof String) {
-                                    field.set(config, Boolean.parseBoolean((String) value));
+                            if (value != null) {
+                                if (field.getType().isAssignableFrom(value.getClass())) {
+                                    field.set(config, value);
                                 } else {
-                                    // Log or throw an error for unsupported types
-//                                    System.err.println("Unsupported type conversion for field: " + fieldName);
-                                    logger.warn("Unsupported type conversion for field: " + fieldName);
+                                    // Handle type conversion if necessary, e.g., for Boolean fields
+                                    if (field.getType().equals(Boolean.class) && value instanceof String) {
+                                        field.set(config, Boolean.parseBoolean((String) value));
+                                    } else {
+                                        // Log or throw an error for unsupported types
+                                        //                                    System.err.println("Unsupported type conversion for field: " + fieldName);
+                                        logger.warn("Unsupported type conversion for field: " + fieldName);
+                                    }
+                                }
+                            } else {
+                                // If value is null and the field type supports null, set it directly.
+                                // This is particularly relevant for object wrapper types like Boolean, String, etc.
+                                if (!field.getType().isPrimitive()) {
+                                    field.set(config, null);
+                                } else {
+                                    // For primitive fields, you might decide to leave the default value
+                                    // or handle it according to your application's needs.
+                                    System.err.println("Cannot set null value to primitive field: " + fieldName);
+                                    logger.warn("Cannot set null value to primitive field: " + fieldName);
                                 }
                             }
                         } catch (NoSuchFieldException | IllegalAccessException e) {

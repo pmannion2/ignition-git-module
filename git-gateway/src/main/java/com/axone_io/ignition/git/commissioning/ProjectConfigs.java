@@ -9,8 +9,9 @@ import java.util.List;
 @Setter
 public class ProjectConfigs {
     private List<ProjectConfig> projects;
-
     // Method to Add Project to Class
-    public void addProject(ProjectConfig projectConfig) {            projects.add(projectConfig);
+    public void addProject(ProjectConfig projectConfig) {
+        if (this.projects == null) { this.projects = new java.util.ArrayList<ProjectConfig>();}
+        projects.add(projectConfig);
 }
 }

@@ -2,6 +2,7 @@ package com.axone_io.ignition.git.commissioning;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 public class ProjectConfig {
     // Getters and setters
@@ -26,6 +27,7 @@ public class ProjectConfig {
     private Boolean ignition_inheritable;
     @Getter
     @Setter
+    @Nullable
     private String ignition_parentName;
     @Getter
     @Setter
