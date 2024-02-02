@@ -34,7 +34,7 @@ public class GitCommissioningUtils {
     public static GitCommissioningConfig config;
 
     @Subscribe
-    public static void loadConfiguration() {
+    public void loadConfiguration() {
         Path dataDir = getDataFolderPath();
         Path yamlConfigPath = dataDir.resolve("git.yaml"); // Assuming the YAML file is named git.yaml
         ProjectManager projectManager = context.getProjectManager();
@@ -124,55 +124,89 @@ public class GitCommissioningUtils {
             } else {
                 logger.info("No git configuration file was found.");
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("An error occurred while git configuration settings up from the provided YAML.", e);
         }
-
-
     }
 
-    static protected ProjectConfigs parseYaml(Path yamlFilePath) {
+    protected ProjectConfigs parseYaml(Path yamlFilePath) {
         try (InputStream inputStream = new FileInputStream(yamlFilePath.toFile())) {
 //            Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
             Yaml yaml = new Yaml();
             Object obj = yaml.load(inputStream);
 
+            ProjectConfigs projectConfigs = new ProjectConfigs();
+
             if (obj instanceof List) {
                 List<Map<String, Object>> list = (List<Map<String, Object>>) obj;
                 for (Map<String, Object> item : list) {
-                    System.out.println(item);
+                    // Create an instance of ProjectConfig
+                    ProjectConfig config = new ProjectConfig();
 
-                    String firstKey = item.keySet().iterator().next();
-                    String className = firstKey.substring(0, firstKey.indexOf('_'));
-                    try {
-                        // Dynamically determine class and instantiate
-                        Class<?> clazz = Class.forName("com.axone_io.ignition.git.commissioning." + className);
-                        ProjectConfig instance = (ProjectConfig) clazz.newInstance();
+                    // Iterate over each entry in the YAML map
+                    for (Map.Entry<String, Object> entry : item.entrySet()) {
+                        try {
+                            // Convert YAML key to field name
+                            String fieldName = this.yamlKeyToFieldName(entry.getKey());
+                            Field field = ProjectConfig.class.getDeclaredField(fieldName);
+                            field.setAccessible(true); // Make the field accessible
 
-                        // Populate instance fields
-                        for (Map.Entry<String, Object> entry : item.entrySet()) {
-                            String fieldName = entry.getKey().substring(entry.getKey().indexOf('_') + 1);
-                            Field field = clazz.getDeclaredField(fieldName);
-                            field.setAccessible(true);
-                            field.set(instance, entry.getValue());
+                            // Set the field value, converting to the appropriate type if necessary
+                            Object value = entry.getValue();
+                            if (field.getType().isAssignableFrom(value.getClass())) {
+                                field.set(config, value);
+                            } else {
+                                // Handle type conversion if necessary, e.g., for Boolean fields
+                                if (field.getType().equals(Boolean.class) && value instanceof String) {
+                                    field.set(config, Boolean.parseBoolean((String) value));
+                                } else {
+                                    // Log or throw an error for unsupported types
+//                                    System.err.println("Unsupported type conversion for field: " + fieldName);
+                                    logger.warn("Unsupported type conversion for field: " + fieldName);
+                                }
+                            }
+                        } catch (NoSuchFieldException | IllegalAccessException e) {
+                            logger.error("Error occurred in fetching YAML Git Config data ", e);
                         }
 
-
-
-                        // Use the instance as needed
-                        System.out.println(instance);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    projectConfigs.addProject(config);
                     }
+                    // Return project configs
+                    return projectConfigs;
                 }
             }
-
-
-        } catch (Exception e) {
-            logger.error("An error occurred while parsing the YAML configuration file.", e);
-            return null; // or throw a custom exception
+        } catch (IOException e) {
+            logger.error("An error occurred while fetching the YAML configuration file.", e);
         }
+        return null;
     }
 
+    private String yamlKeyToFieldName(String yamlKey) {
+        // If the YAML key exactly matches the field name, just return it.
+        // This is a shortcut for cases where no conversion is necessary.
+        // Remove this line if all keys need conversion.
+        if (yamlKey.equals("repo_uri") || yamlKey.equals("repo_branch") ||
+                yamlKey.equals("ignition_projectName") || yamlKey.equals("ignition_userName") ||
+                yamlKey.equals("ignition_inheritable") || yamlKey.equals("ignition_parentName") ||
+                yamlKey.equals("user_name") || yamlKey.equals("user_email") ||
+                yamlKey.equals("user_password") || yamlKey.equals("commissioning_importThemes") ||
+                yamlKey.equals("commissioning_importTags") || yamlKey.equals("commissioning_importImages")) {
+            return yamlKey; // Your field names already match the YAML keys
+        }
+
+        // Split the string at each underscore
+        String[] parts = yamlKey.split("_");
+        StringBuilder fieldName = new StringBuilder(parts[0]); // Keep the first part as is
+
+        // Convert the first letter of each subsequent part to uppercase
+        for (int i = 1; i < parts.length; i++) {
+            // Check if part is not empty to avoid StringIndexOutOfBoundsException
+            if (!parts[i].isEmpty()) {
+                fieldName.append(parts[i].substring(0, 1).toUpperCase()).append(parts[i].substring(1));
+            }
+        }
+
+        return fieldName.toString();
+    }
 }
+

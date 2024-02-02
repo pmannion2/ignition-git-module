@@ -8,6 +8,9 @@ import java.util.List;
 @Getter
 @Setter
 public class ProjectConfigs {
-    @Setter
     private List<ProjectConfig> projects;
+
+    // Method to Add Project to Class
+    public void addProject(ProjectConfig projectConfig) {            projects.add(projectConfig);
+}
 }
