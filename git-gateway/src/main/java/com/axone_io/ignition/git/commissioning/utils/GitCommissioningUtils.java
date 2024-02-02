@@ -34,7 +34,7 @@ public class GitCommissioningUtils {
     public static GitCommissioningConfig config;
 
     @Subscribe
-    public void loadConfiguration() {
+    public static void loadConfiguration() {
         Path dataDir = getDataFolderPath();
         Path yamlConfigPath = dataDir.resolve("git.yaml"); // Assuming the YAML file is named git.yaml
         ProjectManager projectManager = context.getProjectManager();
@@ -129,7 +129,7 @@ public class GitCommissioningUtils {
         }
     }
 
-    protected ProjectConfigs parseYaml(Path yamlFilePath) {
+    protected static ProjectConfigs parseYaml(Path yamlFilePath) {
         try (InputStream inputStream = new FileInputStream(yamlFilePath.toFile())) {
 //            Yaml yaml = new Yaml(new Constructor(ProjectConfigs.class));
             Yaml yaml = new Yaml();
@@ -147,7 +147,7 @@ public class GitCommissioningUtils {
                     for (Map.Entry<String, Object> entry : item.entrySet()) {
                         try {
                             // Convert YAML key to field name
-                            String fieldName = this.yamlKeyToFieldName(entry.getKey());
+                            String fieldName = yamlKeyToFieldName(entry.getKey());
                             Field field = ProjectConfig.class.getDeclaredField(fieldName);
                             field.setAccessible(true); // Make the field accessible
 
@@ -181,7 +181,7 @@ public class GitCommissioningUtils {
         return null;
     }
 
-    private String yamlKeyToFieldName(String yamlKey) {
+    private static String yamlKeyToFieldName(String yamlKey) {
         // If the YAML key exactly matches the field name, just return it.
         // This is a shortcut for cases where no conversion is necessary.
         // Remove this line if all keys need conversion.
