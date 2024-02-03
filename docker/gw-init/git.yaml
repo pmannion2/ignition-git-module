@@ -1,24 +1,24 @@
-- repo_uri: https://github.com/WHK01/whk-distillery01-mes-ui.git
+- repo_uri: https://github.com/exampleUser/my-repo-global.git
   repo_branch: development
-  ignition_projectName: WHK-MES
+  ignition_projectName: Global # My base project name to be inherited by child project
   ignition_userName: admin
-  ignition_inheritable: false
-  ignition_parentName: Global
-  user_name: pmannion2
-  user_email: pmannion@whiskeyhouse.com
+  ignition_inheritable: true
+  ignition_parentName: null
+  user_name: my-github-username
+  user_email: cooldev@myorg.com
   user_password: abc123
   commissioning_importThemes: true
   commissioning_importTags: true
   commissioning_importImages: true
   initDefaultBranch: main
-- repo_uri: https://github.com/WHK01/whk-distillery01-ignition-global.git
+- repo_uri: https://github.com/exampleUser/my-repo.git
   repo_branch: development
-  ignition_projectName: WHK-MES
+  ignition_projectName: childProject
   ignition_userName: admin
   ignition_inheritable: false
   ignition_parentName: Global
-  user_name: pmannion2
-  user_email: pmannion@whiskeyhouse.com
+  user_name:  my-github-username
+  user_email: cooldev@myorg.com
   user_password: abc123
   commissioning_importThemes: true
   commissioning_importTags: true
