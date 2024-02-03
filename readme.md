@@ -90,3 +90,40 @@ AXONE-IO - contact@axone-io.com - https://www.axone-io.com/
 ## License
 
 This project is licensed by Beerware. Please see the LICENSE.md file for more information.
+
+# YAML Automated Commissioning
+Patrick Mannion - Whiskey House of Kentucky
+
+We've forked the repo and provides a few bug fixes in addition to support multi-project import and inheritance in
+automated commissioning that can be done with this module via Docker Compose (see the [documentation](https://www.axone-io.com/Files/Modules/GIT/1.0.2/doc/index.html)). 
+
+Now, a YAML file can be provided to the `gw-init` dir in the docker compose example:
+```yaml
+- repo_uri: https://github.com/exampleUser/my-repo-global.git
+  repo_branch: development
+  ignition_projectName: Global # My base project name to be inherited by child project
+  ignition_userName: admin
+  ignition_inheritable: true
+  ignition_parentName: null
+  user_name: my-github-username
+  user_email: cooldev@myorg.com
+  user_password: abc123
+  commissioning_importThemes: true
+  commissioning_importTags: true
+  commissioning_importImages: true
+  initDefaultBranch: main
+- repo_uri: https://github.com/exampleUser/my-repo.git
+  repo_branch: development
+  ignition_projectName: childProject
+  ignition_userName: admin
+  ignition_inheritable: false
+  ignition_parentName: Global
+  user_name:  my-github-username
+  user_email: cooldev@myorg.com
+  user_password: abc123
+  commissioning_importThemes: true
+  commissioning_importTags: true
+  commissioning_importImages: true
+```
+You can see a sample usage of this in the Docker example in this repo. If you want to grab a .modl from this build
+without having to launch an IDE, you may download it (signed) [here](https://whkdev01storage.blob.core.windows.net/plugpackages/Git-signed.modl)
