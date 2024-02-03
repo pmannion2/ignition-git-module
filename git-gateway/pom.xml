@@ -9,7 +9,9 @@
         <version>1.0.3</version>
     </parent>
 
+<!--    <groupId>WhiskeyHouse</groupId>-->
     <artifactId>git-gateway</artifactId>
+<!--    <version>1.0.4</version>-->
 
     <dependencies>
         <dependency>
