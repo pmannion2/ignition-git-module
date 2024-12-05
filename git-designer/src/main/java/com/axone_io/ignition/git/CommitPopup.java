@@ -15,6 +15,11 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.StyleContext;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
+import javax.swing.table.TableModel;
+import javax.swing.RowFilter;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +36,8 @@ public class CommitPopup extends JFrame {
     private JButton cancelBtn;
     private JLabel changesLabel;
     private JTable changesTable;
+    private JTextField searchBar; // Search bar
+    private TableRowSorter<TableModel> sorter; // Table sorter
 
     public CommitPopup(Object[][] data, Component parent) {
         try {
@@ -98,6 +105,9 @@ public class CommitPopup extends JFrame {
 
         TableColumn tc = changesTable.getColumnModel().getColumn(0);
         tc.setHeaderRenderer(new SelectAllHeader(changesTable, 0));
+        // Create a TableRowSorter and set it as the sorter for the table
+        sorter = new TableRowSorter<>(changesTable.getModel());
+        changesTable.setRowSorter(sorter);
     }
 
 
@@ -152,6 +162,36 @@ public class CommitPopup extends JFrame {
         messageTextArea = new JTextArea();
         messageTextArea.setText("");
         panel1.add(messageTextArea, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        // Initialize the search bar
+        searchBar = new JTextField(15);
+        panel.add(searchBar, new GridConstraints(0, 1, 1, 1, 0, 1, 3, 0, (Dimension)null, (Dimension)null, (Dimension)null, 0, false));
+
+        // Add a document listener to the search bar
+        searchBar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                search(searchBar.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(searchBar.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Not needed for plain-text fields
+            }
+
+            // Method for searching the table
+            public void search(String str) {
+                if (str.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter(str));
+                }
+            }
+        });
     }
 
     /**
